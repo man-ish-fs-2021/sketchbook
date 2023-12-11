@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { actionItemClick } from "@/redux/slice/Menu";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 
-import {socket} from '../../utils/socket'
+import { socket } from "../../utils/socket";
 
 const Board = () => {
   const dispatch = useAppDispatch();
@@ -36,10 +36,9 @@ const Board = () => {
       }
       const imageData = drawHistory.current[pointer.current];
       ctx?.putImageData(imageData, 0, 0);
-      
     }
     if (actionMenuItem === menuItems.redo) {
-      if (pointer.current < drawHistory.current.length) {
+      if (pointer.current < drawHistory.current.length-1) {
         pointer.current += 1;
       }
       const imageData = drawHistory.current[pointer.current];
@@ -54,21 +53,18 @@ const Board = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const changeConfig = (color: string, size: number) => {
-      
-
       ctx.strokeStyle = color || "black";
       ctx.lineWidth = size || 0;
     };
     const handleChangeConfig = (config: any) => {
       changeConfig(config.color, config.size);
-    }
+    };
 
     changeConfig(color || "black", size || 0);
-    socket.on('changeConfig', handleChangeConfig)
+    socket.on("changeConfig", handleChangeConfig);
     return () => {
-      socket.off('changeConfig', handleChangeConfig)
-
-    }
+      socket.off("changeConfig", handleChangeConfig);
+    };
   }, [color, size]);
   // before repaint
   useLayoutEffect(() => {
@@ -89,13 +85,12 @@ const Board = () => {
     const handleMouseDown = (e: MouseEvent) => {
       shouldDraw.current = true;
       beginPath(e.clientX, e.clientY);
-      socket.emit('beginPath', {x: e.clientX, y: e.clientY})
+      socket.emit("beginPath", { x: e.clientX, y: e.clientY });
     };
     const handleMouseMove = (e: MouseEvent) => {
       if (!shouldDraw.current) return;
       drawLine(e.clientX, e.clientY);
-      socket.emit('drawLine', {x: e.clientX, y: e.clientY})
-
+      socket.emit("drawLine", { x: e.clientX, y: e.clientY });
     };
     const handleMouseUp = () => {
       shouldDraw.current = false;
@@ -106,25 +101,25 @@ const Board = () => {
     };
     socket.on("connect", () => {
       console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-      console.log('client connected'); // x8WIv7-mJelg7on_ALbx
+      console.log("client connected"); // x8WIv7-mJelg7on_ALbx
     });
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
     const handleBeginPath = (path: any) => {
-      beginPath(path.x, path.y)
-    }
+      beginPath(path.x, path.y);
+    };
     const handleDrawLine = (path: any) => {
-      drawLine(path.x, path.y)
-    }
-    socket.on('beginPath', handleBeginPath)
-    socket.on('drawLine', handleDrawLine)
+      drawLine(path.x, path.y);
+    };
+    socket.on("beginPath", handleBeginPath);
+    socket.on("drawLine", handleDrawLine);
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
-      socket.off('beginPath', handleBeginPath)
-      socket.off('drawLine', handleDrawLine)
+      socket.off("beginPath", handleBeginPath);
+      socket.off("drawLine", handleDrawLine);
     };
   }, []);
   console.log({ color, size });
