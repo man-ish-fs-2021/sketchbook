@@ -1,0 +1,15 @@
+.menuWrapper {
+  @apply h-10 px-5 py-1 border-border2 shadow-shadow1 bg-background1 flex items-center justify-between w-1/4 absolute left-1/2 top-10 rounded-md border;
+  transform: translateX(-50%);
+  .iconWrapper {
+    @apply m-2 h-full w-full cursor-pointer flex justify-center items-center rounded-md hover:bg-hov;
+
+    &.active {
+      background-color: theme("backgroundColor.hov");
+    }
+    .icon {
+      color: theme("colors.text1");
+      height: 20px;
+    }
+  }
+}

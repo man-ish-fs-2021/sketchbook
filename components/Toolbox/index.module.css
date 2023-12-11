@@ -1,0 +1,21 @@
+.toolboxContainer {
+  @apply border-border2 border p-5 absolute top-1/4 left-5 w-64 rounded-md shadow-shadow1 bg-background1;
+  .tool {
+    @apply mb-5;
+    .heading {
+      font-size: 11px;
+      color: theme("colors.text1");
+    }
+    .itemContainer {
+      @apply flex justify-between mt-2;
+      .colorBox {
+        @apply h-5 w-5 mr-1 rounded-sm cursor-pointer;
+
+        &:hover,
+        &.active {
+          border: theme("border.border2");
+        }
+      }
+    }
+  }
+}
